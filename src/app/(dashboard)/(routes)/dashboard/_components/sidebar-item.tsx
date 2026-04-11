@@ -21,7 +21,7 @@ export default function SidebarItem({
   return (
     <button
       onClick={handleClick}
-      className="flex h-full items-center gap-2 p-2 hover:bg-sky-100 cursor-pointer"
+      className="flex h-full items-center gap-2 p-2 font-extrabold hover:bg-sky-100 cursor-pointer"
     >
       <Icon />
       <span>{label}</span>
