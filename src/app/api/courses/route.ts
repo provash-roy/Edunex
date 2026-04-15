@@ -30,7 +30,3 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
-  console.log("GET /api/courses called");
-  return new NextResponse("Hello, World!");
-}

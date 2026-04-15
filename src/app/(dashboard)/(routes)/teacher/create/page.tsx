@@ -5,63 +5,75 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldLabel,
+} from "@/components/ui/field";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const schema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
 });
 
 export default function CreatePage() {
-  const form = useForm({
+  const router = useRouter();
+  const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       title: "",
     },
   });
+
+  const onSubmit = async (data: z.infer<typeof schema>) => {
+    const response = await axios.post("/api/courses", data);
+
+    toast.success("Course created successfully!");
+
+    router.push(`/teacher/courses/${response.data.id}`);
+  };
+
   return (
     <div className="h-full p-4">
-      <h1 className="text-2xl ">Name your course</h1>
-      <p className="text-sm text-slate-600">
-        What would you like to name your course? Don`&apos;`t worry, you can
-        always change it later.
-      </p>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(console.log)} className="space-y-4">
-          <Controller
-            name="title"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Bug Title</FieldLabel>
-                <Input
-                  {...field}
-                  id={field.name}
-                  aria-invalid={fieldState.invalid}
-                  placeholder="Login button not working on mobile"
-                  autoComplete="off"
-                />
-                <FieldDescription>
-                  Provide a concise title for your bug report.
-                </FieldDescription>
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
-                )}
-              </Field>
-            )}
-          />
+      <h1 className="text-2xl">Name your course</h1>
 
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
+      <p className="text-sm text-slate-600 mb-4">
+        What would you like to name your course? Don’t worry, you can always
+        change it later.
+      </p>
+
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <Controller
+          name="title"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor={field.name}>Course Title</FieldLabel>
+
+              <Input
+                {...field}
+                id={field.name}
+                aria-invalid={fieldState.invalid}
+                placeholder="e.g. Complete MERN Stack Course"
+                autoComplete="off"
+              />
+
+              <FieldDescription>
+                Give your course a clear and descriptive name.
+              </FieldDescription>
+
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        <Button type="submit">Submit</Button>
+      </form>
     </div>
   );
 }
