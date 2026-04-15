@@ -1,5 +1,5 @@
 import React from "react";
-import Sidebar from "./(routes)/dashboard/_components/sidebar";
+import Sidebar from "./_components/sidebar";
 import Navbar from "@/components/navbar";
 
 export default function DashboardLayout({
@@ -15,7 +15,6 @@ export default function DashboardLayout({
 
       <main className="h-full flex-1">
         <div>
-        
           <Navbar />
         </div>
         <div>{children}</div>
