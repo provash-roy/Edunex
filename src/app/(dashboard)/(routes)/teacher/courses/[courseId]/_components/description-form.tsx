@@ -18,15 +18,14 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Course } from "@/generated/prisma/client";
 
 const schema = z.object({
   description: z.string().min(5, "Description must be at least 5 characters"),
 });
 
 interface DescriptionFormProps {
-  initialValues: {
-    description: string;
-  };
+  initialValues: Course;
   courseId: string;
 }
 
@@ -41,11 +40,11 @@ export default function DescriptionForm({
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      description: initialValues.description,
+      description: initialValues?.description || "",
     },
   });
 
-  const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting } = form.formState;
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     await axios.patch(`/api/courses/${courseId}`, data);

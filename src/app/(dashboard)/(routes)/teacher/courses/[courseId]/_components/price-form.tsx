@@ -18,16 +18,15 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
-//price form
+import { Course } from "@/generated/prisma/client";
+
 
 const schema = z.object({
-  price: z.number().positive("Price must be a positive number"),
+  price: z.coerce.number().positive("Price must be a positive number"),
 });
 
 interface PriceFormProps {
-  initialValues: {
-    price: number;
-  };
+  initialValues: Course
   courseId: string;
 }
 
@@ -39,11 +38,11 @@ export default function PriceForm({ initialValues, courseId }: PriceFormProps) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      price: initialValues.price,
+      price: initialValues?.price|| undefined,
     },
   });
 
-  const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting } = form.formState;
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     await axios.patch(`/api/courses/${courseId}`, data);
@@ -68,7 +67,9 @@ export default function PriceForm({ initialValues, courseId }: PriceFormProps) {
         </Button>
       </div>
       {!isEditing && (
-        <p className="text-sm text-slate-600 mt-1">${initialValues.price.toFixed(2)}</p>
+        <p className="text-sm text-slate-600 mt-1">
+          {initialValues.price || "No price set"}
+        </p>
       )}
       {isEditing && (
         <>
@@ -82,6 +83,7 @@ export default function PriceForm({ initialValues, courseId }: PriceFormProps) {
 
                   <Input
                     {...field}
+                    value={field.value ?? ""}
                     disabled={isSubmitting}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
