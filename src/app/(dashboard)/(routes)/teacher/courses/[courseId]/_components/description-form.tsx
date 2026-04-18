@@ -20,17 +20,20 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 const schema = z.object({
-  title: z.string().min(5, "Title must be at least 5 characters"),
+  description: z.string().min(5, "Description must be at least 5 characters"),
 });
 
-interface TitleFormProps {
+interface DescriptionFormProps {
   initialValues: {
-    title: string;
+    description: string;
   };
   courseId: string;
 }
 
-export default function TitleForm({ initialValues, courseId }: TitleFormProps) {
+export default function DescriptionForm({
+  initialValues,
+  courseId,
+}: DescriptionFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((prev) => !prev);
   const router = useRouter();
@@ -38,7 +41,7 @@ export default function TitleForm({ initialValues, courseId }: TitleFormProps) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      title: initialValues.title,
+      description: initialValues.description,
     },
   });
 
@@ -54,30 +57,34 @@ export default function TitleForm({ initialValues, courseId }: TitleFormProps) {
   return (
     <div className="border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Title
+        Course Description
         <Button onClick={toggleEdit} variant="ghost" size="sm">
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil />
-              Edit Title
+              Edit Description
             </>
           )}
         </Button>
       </div>
       {!isEditing && (
-        <p className="text-sm text-slate-600 mt-1">{initialValues.title}</p>
+        <p className="text-sm text-slate-600 mt-1">
+          {initialValues.description || "No description provided yet."}
+        </p>
       )}
       {isEditing && (
         <>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Controller
-              name="title"
+              name="description"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Course Title</FieldLabel>
+                  <FieldLabel htmlFor={field.name}>
+                    Course Description
+                  </FieldLabel>
 
                   <Input
                     {...field}
@@ -89,7 +96,8 @@ export default function TitleForm({ initialValues, courseId }: TitleFormProps) {
                   />
 
                   <FieldDescription>
-                    Give your course a clear and descriptive name.
+                    Give a nice description to your course to help students
+                    understand what they will learn.
                   </FieldDescription>
 
                   {fieldState.invalid && (
