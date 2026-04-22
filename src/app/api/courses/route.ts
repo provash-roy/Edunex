@@ -29,4 +29,3 @@ export async function POST(req: Request) {
     return new NextResponse("Failed to create course", { status: 500 });
   }
 }
-

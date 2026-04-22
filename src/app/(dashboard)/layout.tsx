@@ -1,7 +1,7 @@
 import React from "react";
 import Sidebar from "./_components/sidebar";
 import Navbar from "@/components/navbar";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 export default function DashboardLayout({
   children,

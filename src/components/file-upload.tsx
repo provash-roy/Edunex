@@ -1,26 +1,32 @@
 "use client";
+
 import { UploadDropzone } from "@/lib/uploadthing";
-import { OurFileRouter } from "@/app/api/uploadthing/core";
 import toast from "react-hot-toast";
 
 interface FileUploadProps {
   onChange: (url?: string) => void;
-  endpoint: keyof OurFileRouter;
+  endpoint: "courseImage" | "courseAttachment" | "chapterVideo";
 }
 
 export default function FileUpload({ onChange, endpoint }: FileUploadProps) {
   return (
     <UploadDropzone
       endpoint={endpoint}
+      appearance={{
+        container: "bg-slate-100 rounded-md p-4",
+        button: "bg-black text-white",
+      }}
       onClientUploadComplete={(res) => {
-        if (res) {
-          const url = res[0].ufsUrl;
+        const url = res?.[0]?.ufsUrl;
+
+        if (url) {
           onChange(url);
         } else {
-          onChange();
+          onChange(undefined);
         }
       }}
       onUploadError={(error: Error) => {
+        console.error(error);
         toast.error(`ERROR! ${error.message}`);
       }}
     />
