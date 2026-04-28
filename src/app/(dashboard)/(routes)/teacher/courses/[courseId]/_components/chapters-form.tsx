@@ -3,7 +3,7 @@
 import * as z from "zod";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Pencil } from "lucide-react";
+import {PlusCircle } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
@@ -19,70 +19,77 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { Course } from "@/generated/prisma/client";
+import ChapterList from "./chapters-list";
 
 const schema = z.object({
-  description: z.string().min(5, "Description must be at least 5 characters"),
+  title: z.string().min(5, "Title must be at least 5 characters"),
 });
 
-interface DescriptionFormProps {
+interface ChaptersFormProps{
   initialValues: Course;
   courseId: string;
 }
 
-export default function DescriptionForm({
+export default function ChaptersForm({
   initialValues,
   courseId,
-}: DescriptionFormProps) {
-  const [isEditing, setIsEditing] = useState(false);
-  const toggleEdit = () => setIsEditing((prev) => !prev);
+}: ChaptersFormProps) {
+
+  const [isCreating , setIsCreating] = useState(false);
+  const [isUpdating,setIsUpdating]= useState(false);
+  const toggleCreating = () => setIsCreating((prev) => !prev);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      description: initialValues?.description || "",
+      title:  "",
     },
   });
 
   const { isSubmitting } = form.formState;
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
-    await axios.patch(`/api/courses/${courseId}`, data);
+    await axios.post(`/api/courses/${courseId}/chapters`, data);
     toast.success("Course updated");
-    toggleEdit();
+    toggleCreating();
     router.refresh();
   };
 
   return (
     <div className="border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Description
-        <Button onClick={toggleEdit} variant="ghost" size="sm">
-          {isEditing ? (
+        Course Chapters
+        <Button onClick={toggleCreating} variant="ghost" size="sm">
+          {isCreating ? (
             <>Cancel</>
           ) : (
             <>
-              <Pencil />
-              Edit Description
+              <PlusCircle />
+              Add Chapters
             </>
           )}
         </Button>
       </div>
-      {!isEditing && (
-        <p className="text-sm text-slate-600 mt-1">
-          {initialValues.description || "No description provided yet."}
-        </p>
+      {!isCreating && (
+          {initialValues.description || "No chapters provided yet."}
+          <ChapterList
+          onEdit={()=>{}}
+          onReorder={()=>{}}
+        items={initialValues.chapter || []}
+        />
+        
       )}
-      {isEditing && (
+      {isCreating && (
         <>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Controller
-              name="description"
+              name="title"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor={field.name}>
-                    Course Description
+                    Chapter Title
                   </FieldLabel>
 
                   <Input
@@ -95,7 +102,7 @@ export default function DescriptionForm({
                   />
 
                   <FieldDescription>
-                    Give a nice description to your course to help students
+                    Give a nice title to your course to help students
                     understand what they will learn.
                   </FieldDescription>
 
@@ -106,11 +113,10 @@ export default function DescriptionForm({
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit">Create</Button>
           </form>
         </>
       )}
     </div>
   );
 }
-
