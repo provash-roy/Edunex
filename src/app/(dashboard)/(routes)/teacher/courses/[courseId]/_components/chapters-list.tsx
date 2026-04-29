@@ -220,11 +220,7 @@ import { Button } from "@/components/ui/button";
 
 import { GripVertical, BookOpen, Save, Eye, EyeOff } from "lucide-react";
 
-/**
- * 🔥 Fix:
- * @hello-pangea/dnd often causes hydration mismatch in Next.js
- * So disable SSR for DnD components
- */
+
 const DragDropContext = dynamic(
   async () => (await import("@hello-pangea/dnd")).DragDropContext,
   { ssr: false },
@@ -272,9 +268,10 @@ const initialChapters: Chapter[] = [
 ];
 
 export default function ChaptersList() {
-  /**
-   * 🔥 Prevent hydration mismatch
-   */
+  
+  
+  // Prevent hydration mismatch
+   
   const [isMounted, setIsMounted] = useState(false);
 
   const [chapters, setChapters] = useState<Chapter[]>(initialChapters);

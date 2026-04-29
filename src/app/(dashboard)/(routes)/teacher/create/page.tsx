@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 const schema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
@@ -39,7 +40,7 @@ export default function CreatePage() {
   };
 
   return (
-    <div className="h-full p-4">
+    <div className="h-full p-4 md:p-24">
       <h1 className="text-2xl">Name your course</h1>
 
       <p className="text-sm text-slate-600 mb-4">
@@ -71,8 +72,20 @@ export default function CreatePage() {
             </Field>
           )}
         />
-
-        <Button type="submit">Submit</Button>
+        <div className="flex items-center  gap-x-2">
+          <Link href="/teacher/courses">
+            <Button type="button" variant="ghost">
+              Cancel
+            </Button>
+          </Link>
+          <Button
+            size="sm"
+            type="submit"
+            disabled={!form.formState.isValid || form.formState.isSubmitting}
+          >
+            Continue
+          </Button>
+        </div>
       </form>
     </div>
   );
