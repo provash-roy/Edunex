@@ -10,6 +10,7 @@ import ChaptersForm from "./_components/chapters-form";
 import DescriptionForm from "./_components/description-form";
 import PriceForm from "./_components/price-form";
 import ThumbnailForm from "./_components/thumbnail-form";
+import CategoryForm from "./_components/category-form";
 
 interface CourseIdPageProps {
   params: Promise<{ courseId: string }>;
@@ -64,10 +65,14 @@ export default async function CourseIdPage({ params }: CourseIdPageProps) {
           </div>
           <TitleForm initialValues={course} courseId={courseId} />
           <DescriptionForm initialValues={course} courseId={courseId} />
+          <CategoryForm initialValues={course} courseId={courseId} />
+          <PriceForm initialValues={course} courseId={courseId} />
           <ThumbnailForm initialValues={course} courseId={courseId} />
         </div>
-        <ChaptersForm initialValues={course} courseId={courseId} />
-        <PriceForm initialValues={course} courseId={courseId} />
+        <div>
+          <ChaptersForm initialValues={course} courseId={courseId} />
+        </div>
+        <div></div>
       </div>
     </div>
   );

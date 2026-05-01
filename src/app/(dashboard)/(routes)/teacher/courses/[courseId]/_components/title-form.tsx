@@ -42,9 +42,10 @@ export default function TitleForm({ initialValues, courseId }: TitleFormProps) {
     },
   });
 
-  const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting } = form.formState;
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
+    console.log(data);
     await axios.patch(`/api/courses/${courseId}`, data);
     toast.success("Course updated");
     toggleEdit();

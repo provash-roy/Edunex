@@ -16,10 +16,7 @@ model Course {
   thumbnail   String?
   published   Boolean  @default(false)
 
-
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id],onDelete: SetNull)
-
+  category String?
   attachments Attachment[]
   chapters    Chapter[]
   enrollments Enrollment[]
@@ -27,18 +24,11 @@ model Course {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@index([categoryId])
+ 
   @@index([userId])
 }
 
-model Category {
-  id        String   @id @default(uuid())
-  name      String   @unique
-  courses   Course[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
 
 model Attachment {
   id        String   @id @default(uuid())
