@@ -13,15 +13,14 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Course } from "@/generated/prisma/browser";
 
 const schema = z.object({
   category: z.string().min(5, "category must be at least 5 characters"),
 });
 
 interface CategoryFormProps {
-  initialValues: {
-    category: string;
-  };
+  initialValues: Course;
   courseId: string;
 }
 
@@ -40,7 +39,7 @@ export default function CategoryForm({
     },
   });
 
-  const { isSubmitting, isValid } = form.formState;
+  const { isSubmitting } = form.formState;
 
   const onSubmit = async (data: z.infer<typeof schema>) => {
     await axios.patch(`/api/courses/${courseId}`, data);
