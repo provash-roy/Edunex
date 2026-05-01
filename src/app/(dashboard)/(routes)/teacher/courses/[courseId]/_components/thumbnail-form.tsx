@@ -1,9 +1,6 @@
 "use client";
 
-import * as z from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ImageIcon, Pencil, PlusCircle } from "lucide-react";
+import { ImageIcon, Pencil, PlusCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -13,10 +10,6 @@ import { useRouter } from "next/navigation";
 
 import { Course } from "@/generated/prisma/client";
 import FileUpload from "@/components/file-upload";
-
-const schema = z.object({
-  thumbnail: z.string().min(1, "Thumbnail is required"),
-});
 
 interface ThumbnailFormProps {
   initialValues: Course;
@@ -30,30 +23,43 @@ export default function ThumbnailForm({
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [thumbnail, setThumbnail] = useState(initialValues?.thumbnail || "");
+
   const router = useRouter();
 
-  const toggleEdit = () => setIsEditing((prev) => !prev);
+  const toggleEdit = () => {
+    if (!isLoading) {
+      setIsEditing((prev) => !prev);
+    }
+  };
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      thumbnail: initialValues?.thumbnail || "",
-    },
-  });
+  // Auto update immediately after upload
+  const handleThumbnailChange = async (url?: string) => {
+    if (!url) return;
 
-  const thumbnail = form.watch("thumbnail");
-
-  const onSubmit = async (data: z.infer<typeof schema>) => {
     try {
       setIsLoading(true);
 
-      await axios.patch(`/api/courses/${courseId}`, data);
+      // UI preview instantly
+      setThumbnail(url);
 
-      toast.success("Course updated successfully");
+      // DB update instantly
+      await axios.patch(`/api/courses/${courseId}`, {
+        thumbnail: url,
+      });
+
+      toast.success("Thumbnail updated successfully");
+
+      // Exit edit mode automatically
       setIsEditing(false);
+
       router.refresh();
     } catch (error) {
       console.error(error);
+
+      // rollback optional
+      setThumbnail(initialValues?.thumbnail || "");
+
       toast.error("Something went wrong");
     } finally {
       setIsLoading(false);
@@ -62,10 +68,14 @@ export default function ThumbnailForm({
 
   return (
     <div className="border bg-slate-100 rounded-md p-4">
-      {/* HEADER */}
       <div className="font-medium flex items-center justify-between">
         Course Thumbnail
-        <Button onClick={toggleEdit} variant="ghost" size="sm">
+        <Button
+          onClick={toggleEdit}
+          variant="ghost"
+          size="sm"
+          disabled={isLoading}
+        >
           {!isEditing && !thumbnail && (
             <>
               <PlusCircle className="h-4 w-4 mr-1" />
@@ -93,7 +103,7 @@ export default function ThumbnailForm({
               alt="Course Thumbnail"
               width={400}
               height={240}
-              className="object-cover rounded-md"
+              className="object-cover w-full h-full"
             />
           ) : (
             <ImageIcon className="h-10 w-10 text-slate-500" />
@@ -103,38 +113,22 @@ export default function ThumbnailForm({
 
       {/* EDIT MODE */}
       {isEditing && (
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-4">
-          <FileUpload
-            endpoint="courseImage"
-            onChange={(url?: string) => {
-              if (url) {
-                form.setValue("thumbnail", url, {
-                  shouldValidate: true,
-                  shouldDirty: true,
-                });
-              }
-            }}
-          />
-
-          {thumbnail && (
-            <div className="relative w-full h-60">
-              <Image
-                src={thumbnail}
-                alt="Preview"
-                fill
-                className="object-cover rounded-md"
-              />
+        <div className="mt-4 space-y-4">
+          {isLoading ? (
+            <div className="flex items-center justify-center p-6">
+              <Loader2 className="h-6 w-6 animate-spin text-slate-500" />
             </div>
+          ) : (
+            <FileUpload
+              endpoint="courseImage"
+              onChange={handleThumbnailChange}
+            />
           )}
 
-          <p className="text-xs text-muted-foreground">
+          <div className="text-xs text-muted-foreground">
             Recommended size: 16:9 (e.g. 1280x720)
-          </p>
-
-          <Button type="submit" disabled={isLoading}>
-            Save
-          </Button>
-        </form>
+          </div>
+        </div>
       )}
     </div>
   );

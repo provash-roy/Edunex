@@ -77,8 +77,6 @@ export default function TitleForm({ initialValues, courseId }: TitleFormProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Course Title</FieldLabel>
-
                   <Input
                     {...field}
                     disabled={isSubmitting}
@@ -88,10 +86,6 @@ export default function TitleForm({ initialValues, courseId }: TitleFormProps) {
                     autoComplete="off"
                   />
 
-                  <FieldDescription>
-                    Give your course a clear and descriptive name.
-                  </FieldDescription>
-
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -99,7 +93,9 @@ export default function TitleForm({ initialValues, courseId }: TitleFormProps) {
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" size="sm" disabled={isSubmitting}>
+              Save
+            </Button>
           </form>
         </>
       )}

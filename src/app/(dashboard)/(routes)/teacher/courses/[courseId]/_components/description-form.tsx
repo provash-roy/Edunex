@@ -81,10 +81,6 @@ export default function DescriptionForm({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>
-                    Course Description
-                  </FieldLabel>
-
                   <Input
                     {...field}
                     disabled={isSubmitting}
@@ -93,12 +89,6 @@ export default function DescriptionForm({
                     placeholder="e.g. Complete MERN Stack Course"
                     autoComplete="off"
                   />
-
-                  <FieldDescription>
-                    Give a nice description to your course to help students
-                    understand what they will learn.
-                  </FieldDescription>
-
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -106,11 +96,12 @@ export default function DescriptionForm({
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" size="sm" disabled={isSubmitting}>
+              Save
+            </Button>
           </form>
         </>
       )}
     </div>
   );
 }
-

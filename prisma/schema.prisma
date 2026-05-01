@@ -15,15 +15,20 @@ model Course {
   price       Float?
   thumbnail   String?
   published   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+
 
   categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category    Category? @relation(fields: [categoryId], references: [id],onDelete: SetNull)
 
   attachments Attachment[]
   chapters    Chapter[]
   enrollments Enrollment[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([userId])
 }
 
 model Category {
@@ -60,12 +65,15 @@ model Chapter {
   muxData      MuxData?
 
   courseId     String
-  course       Course   @relation(fields: [courseId], references: [id])
+  course       Course   @relation(fields: [courseId], references: [id],onDelete: Cascade)
 
   userProgress UserProgress[]
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+
+  @@index([courseId])
+  @@unique([courseId, position])
 }
 
 model MuxData {
@@ -74,7 +82,7 @@ model MuxData {
   playbackId String?
 
   chapterId  String   @unique
-  chapter    Chapter  @relation(fields: [chapterId], references: [id])
+  chapter    Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 }
 
 model UserProgress {
@@ -82,7 +90,7 @@ model UserProgress {
   userId      String
 
   chapterId   String
-  chapter     Chapter  @relation(fields: [chapterId], references: [id])
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
 
   isCompleted Boolean  @default(false)
 
@@ -103,6 +111,7 @@ model Enrollment {
   createdAt DateTime @default(now())
 
   @@index([courseId])
+  @@unique([userId, courseId])
 }
 
 model Payment {

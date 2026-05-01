@@ -33,26 +33,41 @@ export default async function CourseIdPage({ params }: CourseIdPageProps) {
     return redirect("/");
   }
 
+  const requiredFields = [
+    course.title,
+    course.description,
+    course.thumbnail,
+    course.price,
+    course.categoryId,
+  ];
+
+  const totalFields = requiredFields.length;
+  const completedFields = requiredFields.filter(Boolean).length;
+  const completionText = `(${completedFields}/${totalFields})`;
+
   return (
     <div className="p-4">
       <div>
         <h1 className="text-2xl font-medium">Course Setup</h1>
-        <span className="text-sm text-slate-700">Complete all fields</span>
+        <span className="text-sm text-slate-700">
+          Complete all fields {completionText}
+        </span>
       </div>
-      <div className="flex items-center gap-2 mt-8">
-        <IconBadge>
-          <LayoutDashboard />
-        </IconBadge>
-        <h1 className="text-xl">Customize your course</h1>
-      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <TitleForm initialValues={course} courseId={courseId} />
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 mt-8">
+            <IconBadge>
+              <LayoutDashboard />
+            </IconBadge>
+            <h1 className="text-xl">Customize your course</h1>
+          </div>
+          <TitleForm initialValues={course} courseId={courseId} />
+          <DescriptionForm initialValues={course} courseId={courseId} />
+          <ThumbnailForm initialValues={course} courseId={courseId} />
+        </div>
         <ChaptersForm initialValues={course} courseId={courseId} />
         <PriceForm initialValues={course} courseId={courseId} />
-        <ThumbnailForm initialValues={course} courseId={courseId} />
-        <TitleForm initialValues={course} courseId={courseId} />
-        <TitleForm initialValues={course} courseId={courseId} />
-        <TitleForm initialValues={course} courseId={courseId} />
       </div>
     </div>
   );
