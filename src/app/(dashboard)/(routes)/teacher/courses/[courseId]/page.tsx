@@ -33,9 +33,9 @@ export default async function CourseIdPage({ params }: CourseIdPageProps) {
       attachments: {
         orderBy: { createdAt: "desc" },
       },
-      // chapters: {
-      //   orderBy: { position: "asc" },
-      // }
+      chapters: {
+        orderBy: { position: "asc" },
+      },
     },
   });
 
@@ -49,6 +49,7 @@ export default async function CourseIdPage({ params }: CourseIdPageProps) {
     course.thumbnail,
     course.price,
     course.category,
+    course.chapters.some((chapter) => chapter.isPublished),
   ];
 
   const totalFields = requiredFields.length;

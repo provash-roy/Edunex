@@ -22,14 +22,12 @@ import toast from "react-hot-toast";
 import { Course, Chapter } from "@/generated/prisma/client";
 
 import ChapterList from "./chapters-list";
+import ChaptersList from "./chapters-list";
 
 const schema = z.object({
   title: z.string().min(5, "Title must be at least 5 characters"),
 });
 
-/**
- * 🔥 Course + chapters relation type
- */
 interface ChaptersFormProps {
   initialValues: Course & {
     chapters: Chapter[];
@@ -42,6 +40,7 @@ export default function ChaptersForm({
   courseId,
 }: ChaptersFormProps) {
   const [isCreating, setIsCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const toggleCreating = () => setIsCreating((prev) => !prev);
 
@@ -56,9 +55,6 @@ export default function ChaptersForm({
 
   const { isSubmitting } = form.formState;
 
-  /**
-   * 🔥 Create new chapter
-   */
   const onSubmit = async (data: z.infer<typeof schema>) => {
     try {
       await axios.post(`/api/courses/${courseId}/chapters`, data);
@@ -75,11 +71,10 @@ export default function ChaptersForm({
     }
   };
 
-  /**
-   * 🔥 Reorder chapters
-   */
   const onReorder = async (updateData: { id: string; position: number }[]) => {
     try {
+      setIsUpdating(true);
+
       await axios.put(`/api/courses/${courseId}/chapters/reorder`, {
         list: updateData,
       });
@@ -89,12 +84,11 @@ export default function ChaptersForm({
       router.refresh();
     } catch {
       toast.error("Something went wrong");
+    } finally {
+      setIsUpdating(false);
     }
   };
 
-  /**
-   * 🔥 Edit chapter
-   */
   const onEdit = (id: string) => {
     router.push(`/teacher/courses/${courseId}/chapters/${id}`);
   };
@@ -103,7 +97,7 @@ export default function ChaptersForm({
     <div className="border bg-slate-100 rounded-md p-4">
       {/* Header */}
       <div className="font-medium flex items-center justify-between">
-        Course Chapters
+        Chapter Title
         <Button onClick={toggleCreating} variant="ghost" size="sm">
           {isCreating ? (
             <>Cancel</>
@@ -116,7 +110,6 @@ export default function ChaptersForm({
         </Button>
       </div>
 
-      {/* Chapter List */}
       {!isCreating && (
         <div className="mt-4">
           {initialValues.chapters?.length === 0 ? (
@@ -124,10 +117,10 @@ export default function ChaptersForm({
               No chapters provided yet.
             </p>
           ) : (
-            <ChapterList
+            <ChaptersList
               onEdit={onEdit}
               onReorder={onReorder}
-              items={initialValues.chapters}
+              items={initialValues.chapters || []}
             />
           )}
         </div>
@@ -141,8 +134,6 @@ export default function ChaptersForm({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Chapter Title</FieldLabel>
-
                 <Input
                   {...field}
                   disabled={isSubmitting}

@@ -1,226 +1,12 @@
-// // "use client";
-
-// // import { Chapter } from "@/generated/prisma/client";
-
-// // interface ChaptersListProps {
-// //   items: Chapter[];
-// //   onReorder: (updateData: { id: string; position: number }[]) => void;
-// //   onEdit: (id: string) => void;
-// // }
-
-// // export default function ChaptersList({
-// //   items,
-// //   onReorder,
-// //   onEdit,
-// // }: ChaptersListProps) {
-// //   return <div>ChapterList</div>;
-// // }
-
-// "use client";
-
-// import React, { useState } from "react";
-// import {
-//   DragDropContext,
-//   Droppable,
-//   Draggable,
-//   DropResult,
-// } from "@hello-pangea/dnd";
-
-// import { Card, CardContent } from "@/components/ui/card";
-// import { Button } from "@/components/ui/button";
-
-// import { GripVertical, BookOpen, Save, Eye, EyeOff } from "lucide-react";
-
-// type Chapter = {
-//   id: string;
-//   title: string;
-//   isPublished: boolean;
-// };
-
-// const initialChapters: Chapter[] = [
-//   {
-//     id: "chapter-1",
-//     title: "Introduction to Web Development",
-//     isPublished: true,
-//   },
-//   {
-//     id: "chapter-2",
-//     title: "HTML Fundamentals",
-//     isPublished: true,
-//   },
-//   {
-//     id: "chapter-3",
-//     title: "CSS Mastery",
-//     isPublished: false,
-//   },
-//   {
-//     id: "chapter-4",
-//     title: "JavaScript Essentials",
-//     isPublished: false,
-//   },
-// ];
-
-// export default function ChaptersList() {
-//   const [chapters, setChapters] = useState(initialChapters);
-
-//   const onDragEnd = (result: DropResult) => {
-//     if (!result.destination) return;
-
-//     const items = Array.from(chapters);
-
-//     const [reorderedItem] = items.splice(result.source.index, 1);
-
-//     items.splice(result.destination.index, 0, reorderedItem);
-
-//     setChapters(items);
-//   };
-
-//   const handleSaveOrder = async () => {
-//     const orderedChapters = chapters.map((chapter, index) => ({
-//       id: chapter.id,
-//       position: index + 1,
-//     }));
-
-//     console.log("Send to backend:", orderedChapters);
-
-//     /*
-//     await fetch("/api/courses/reorder", {
-//       method: "PUT",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({
-//         chapters: orderedChapters,
-//       }),
-//     });
-//     */
-//   };
-
-//   return (
-//     <div className="max-w-5xl mx-auto py-10 px-4">
-//       {/* Header */}
-//       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-//         <div>
-//           <h1 className="text-3xl font-bold tracking-tight">
-//             Course Chapter Reorder
-//           </h1>
-//           <p className="text-muted-foreground mt-2">
-//             Drag and drop chapters to structure your LMS course professionally.
-//           </p>
-//         </div>
-
-//         <Button
-//           onClick={handleSaveOrder}
-//           className="rounded-2xl flex items-center gap-2"
-//         >
-//           <Save className="w-4 h-4" />
-//           Save Order
-//         </Button>
-//       </div>
-
-//       {/* Drag Context */}
-//       <DragDropContext onDragEnd={onDragEnd}>
-//         <Droppable droppableId="chapters">
-//           {(provided) => (
-//             <div
-//               {...provided.droppableProps}
-//               ref={provided.innerRef}
-//               className="space-y-4"
-//             >
-//               {chapters.map((chapter, index) => (
-//                 <Draggable
-//                   key={chapter.id}
-//                   draggableId={chapter.id}
-//                   index={index}
-//                 >
-//                   {(provided, snapshot) => (
-//                     <Card
-//                       ref={provided.innerRef}
-//                       {...provided.draggableProps}
-//                       className={`rounded-2xl border transition-all ${
-//                         snapshot.isDragging
-//                           ? "shadow-2xl ring-2 ring-primary"
-//                           : "shadow-sm"
-//                       }`}
-//                     >
-//                       <CardContent className="p-4 flex items-center justify-between">
-//                         {/* Left Side */}
-//                         <div className="flex items-center gap-4">
-//                           {/* Drag Handle */}
-//                           <div
-//                             {...provided.dragHandleProps}
-//                             className="cursor-grab active:cursor-grabbing text-muted-foreground"
-//                           >
-//                             <GripVertical className="w-5 h-5" />
-//                           </div>
-
-//                           {/* Chapter Icon */}
-//                           <div className="p-2 rounded-xl bg-muted">
-//                             <BookOpen className="w-4 h-4" />
-//                           </div>
-
-//                           {/* Chapter Info */}
-//                           <div>
-//                             <h3 className="font-medium text-sm">
-//                               {index + 1}. {chapter.title}
-//                             </h3>
-
-//                             <p className="text-xs text-muted-foreground mt-1">
-//                               {chapter.isPublished
-//                                 ? "Published and visible to students"
-//                                 : "Draft mode (hidden from students)"}
-//                             </p>
-//                           </div>
-//                         </div>
-
-//                         {/* Right Side */}
-//                         <div className="flex items-center gap-3">
-//                           <span
-//                             className={`text-xs px-3 py-1 rounded-full flex items-center gap-1 ${
-//                               chapter.isPublished
-//                                 ? "bg-green-100 text-green-700"
-//                                 : "bg-yellow-100 text-yellow-700"
-//                             }`}
-//                           >
-//                             {chapter.isPublished ? (
-//                               <>
-//                                 <Eye className="w-3 h-3" />
-//                                 Live
-//                               </>
-//                             ) : (
-//                               <>
-//                                 <EyeOff className="w-3 h-3" />
-//                                 Draft
-//                               </>
-//                             )}
-//                           </span>
-//                         </div>
-//                       </CardContent>
-//                     </Card>
-//                   )}
-//                 </Draggable>
-//               ))}
-
-//               {provided.placeholder}
-//             </div>
-//           )}
-//         </Droppable>
-//       </DragDropContext>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Eye, EyeOff, Grip, Pencil } from "lucide-react";
 
-import { GripVertical, BookOpen, Save, Eye, EyeOff } from "lucide-react";
-
-
+// Dynamic Imports (Fix hydration issues)
 const DragDropContext = dynamic(
   async () => (await import("@hello-pangea/dnd")).DragDropContext,
   { ssr: false },
@@ -244,103 +30,83 @@ type Chapter = {
   isPublished: boolean;
 };
 
-const initialChapters: Chapter[] = [
-  {
-    id: "chapter-1",
-    title: "Introduction to Web Development",
-    isPublished: true,
-  },
-  {
-    id: "chapter-2",
-    title: "HTML Fundamentals",
-    isPublished: true,
-  },
-  {
-    id: "chapter-3",
-    title: "CSS Mastery",
-    isPublished: false,
-  },
-  {
-    id: "chapter-4",
-    title: "JavaScript Essentials",
-    isPublished: false,
-  },
-];
+interface ChaptersListProps {
+  items: Chapter[];
+  onReorder: (updateData: { id: string; position: number }[]) => Promise<void>;
+  onEdit: (id: string) => void;
+}
 
-export default function ChaptersList() {
-  
-  
-  // Prevent hydration mismatch
-   
+export default function ChaptersList({
+  items,
+  onReorder,
+  onEdit,
+}: ChaptersListProps) {
   const [isMounted, setIsMounted] = useState(false);
+  const [chapters, setChapters] = useState<Chapter[]>(items);
+  const [isReordering, setIsReordering] = useState(false);
 
-  const [chapters, setChapters] = useState<Chapter[]>(initialChapters);
-
+  // Prevent hydration mismatch
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Sync props changes
+  useEffect(() => {
+    setChapters(items);
+  }, [items]);
 
   if (!isMounted) {
     return null;
   }
 
-  const onDragEnd = (result: DropResult) => {
+  const onDragEnd = async (result: DropResult) => {
     if (!result.destination) return;
 
-    const items = Array.from(chapters);
+    // Same position হলে unnecessary API call avoid
+    if (result.source.index === result.destination.index) return;
 
-    const [reorderedItem] = items.splice(result.source.index, 1);
+    const originalChapters = [...chapters];
 
-    items.splice(result.destination.index, 0, reorderedItem);
+    // Reorder locally
+    const reordered = Array.from(chapters);
 
-    setChapters(items);
-  };
+    const [movedItem] = reordered.splice(result.source.index, 1);
 
-  const handleSaveOrder = async () => {
-    const orderedChapters = chapters.map((chapter, index) => ({
-      id: chapter.id,
-      position: index + 1,
-    }));
+    reordered.splice(result.destination.index, 0, movedItem);
 
-    console.log("Send to backend:", orderedChapters);
+    // Instant UI update
+    setChapters(reordered);
 
-    /*
-    await fetch("/api/courses/reorder", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        chapters: orderedChapters,
-      }),
-    });
-    */
+    try {
+      setIsReordering(true);
+
+      // Backend payload
+      const bulkUpdateData = reordered.map((chapter, index) => ({
+        id: chapter.id,
+        position: index,
+      }));
+
+      // Parent API call
+      await onReorder(bulkUpdateData);
+    } catch (error) {
+      console.error("Reorder failed:", error);
+
+      // Rollback if API fails
+      setChapters(originalChapters);
+    } finally {
+      setIsReordering(false);
+    }
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-10 px-4">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Course Chapter Reorder
-          </h1>
+    <div className="max-w-5xl mx-auto py-4 px-4">
+      {/* Optional Loader */}
+      {isReordering && (
+        <p className="text-sm text-muted-foreground mb-4">
+          Saving chapter order...
+        </p>
+      )}
 
-          <p className="text-muted-foreground mt-2">
-            Drag and drop chapters to structure your LMS course professionally.
-          </p>
-        </div>
-
-        <Button
-          onClick={handleSaveOrder}
-          className="rounded-2xl flex items-center gap-2"
-        >
-          <Save className="w-4 h-4" />
-          Save Order
-        </Button>
-      </div>
-
-      {/* Drag Context */}
       <DragDropContext onDragEnd={onDragEnd}>
         <Droppable droppableId="chapters">
           {(provided) => (
@@ -354,31 +120,33 @@ export default function ChaptersList() {
                   key={chapter.id}
                   draggableId={chapter.id}
                   index={index}
+                  isDragDisabled={isReordering}
                 >
                   {(provided, snapshot) => (
                     <Card
                       ref={provided.innerRef}
                       {...provided.draggableProps}
-                      className={`rounded-2xl border transition-all ${
+                      className={`rounded-xl border bg-slate-50 transition-all ${
                         snapshot.isDragging
                           ? "shadow-2xl ring-2 ring-primary"
                           : "shadow-sm"
+                      } ${
+                        isReordering ? "opacity-70 pointer-events-none" : ""
                       }`}
                     >
-                      <CardContent className="p-4 flex items-center justify-between">
+                      <CardContent className="flex items-center justify-between py-4">
                         {/* Left Side */}
-                        <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-3">
                           {/* Drag Handle */}
                           <div
                             {...provided.dragHandleProps}
-                            className="cursor-grab active:cursor-grabbing text-muted-foreground"
+                            className={`text-muted-foreground ${
+                              isReordering
+                                ? "cursor-not-allowed"
+                                : "cursor-grab active:cursor-grabbing hover:text-primary"
+                            }`}
                           >
-                            <GripVertical className="w-5 h-5" />
-                          </div>
-
-                          {/* Chapter Icon */}
-                          <div className="p-2 rounded-xl bg-muted">
-                            <BookOpen className="w-4 h-4" />
+                            <Grip className="w-5 h-5" />
                           </div>
 
                           {/* Chapter Info */}
@@ -386,17 +154,12 @@ export default function ChaptersList() {
                             <h3 className="font-medium text-sm">
                               {index + 1}. {chapter.title}
                             </h3>
-
-                            <p className="text-xs text-muted-foreground mt-1">
-                              {chapter.isPublished
-                                ? "Published and visible to students"
-                                : "Draft mode (hidden from students)"}
-                            </p>
                           </div>
                         </div>
 
                         {/* Right Side */}
                         <div className="flex items-center gap-3">
+                          {/* Publish Status */}
                           <span
                             className={`text-xs px-3 py-1 rounded-full flex items-center gap-1 ${
                               chapter.isPublished
@@ -416,6 +179,17 @@ export default function ChaptersList() {
                               </>
                             )}
                           </span>
+
+                          {/* Edit Button */}
+                          <Pencil
+                            onClick={() => !isReordering && onEdit(chapter.id)}
+                            size={16}
+                            className={`transition ${
+                              isReordering
+                                ? "cursor-not-allowed opacity-50"
+                                : "cursor-pointer hover:text-primary"
+                            }`}
+                          />
                         </div>
                       </CardContent>
                     </Card>
