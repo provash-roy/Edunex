@@ -2,10 +2,12 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { ArrowLeft, LayoutDashboard } from "lucide-react";
+import { ArrowLeft, LayoutDashboard, Video, VideoIcon } from "lucide-react";
 import IconBadge from "../../_components/icon-badge";
 import ChapterTitleForm from "./_components/chapter-title-form";
 import ChapterDescriptionForm from "./_components/chapter-description-form";
+import ChapterAccessForm from "./_components/chapter-access-form";
+import ChapterVideoForm from "./_components/chapter-video-form";
 
 export default async function ChapterIdPage({
   params,
@@ -69,7 +71,32 @@ export default async function ChapterIdPage({
             courseId={courseId}
             chapterId={chapterId}
           />
+
           <ChapterDescriptionForm
+            initialValues={chapter}
+            courseId={courseId}
+            chapterId={chapterId}
+          />
+
+          <div className="flex items-center gap-2 mt-8">
+            <IconBadge>
+              <LayoutDashboard />
+            </IconBadge>
+            <h1 className="text-xl">Access Setting</h1>
+          </div>
+          <ChapterAccessForm
+            initialValues={chapter}
+            courseId={courseId}
+            chapterId={chapterId}
+          />
+
+          <div className="flex items-center gap-2 mt-8">
+            <IconBadge>
+              <VideoIcon />
+            </IconBadge>
+            <h1 className="text-xl">Add a Video</h1>
+          </div>
+          <ChapterVideoForm
             initialValues={chapter}
             courseId={courseId}
             chapterId={chapterId}
