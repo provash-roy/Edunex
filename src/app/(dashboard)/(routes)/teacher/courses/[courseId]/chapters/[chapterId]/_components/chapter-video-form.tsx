@@ -66,14 +66,14 @@ export default function ChapterVideoForm({
           size="sm"
           disabled={isLoading}
         >
-          {!isEditing && !hasVideo && (
+          {!isEditing && !initialValues.videoUrl && (
             <>
               <PlusCircle className="h-4 w-4 mr-1" />
               Add a video
             </>
           )}
 
-          {!isEditing && hasVideo && (
+          {!isEditing && initialValues.videoUrl && (
             <>
               <Pencil className="h-4 w-4 mr-1" />
               Edit video
@@ -87,7 +87,7 @@ export default function ChapterVideoForm({
       {/* VIEW MODE */}
       {!isEditing && (
         <div className="flex items-center justify-center h-60 bg-slate-200 rounded-md mt-2">
-          {hasVideo ? (
+          {initialValues.videoUrl ? (
             <video
               src={initialValues.videoUrl!}
               controls

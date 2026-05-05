@@ -44,3 +44,38 @@ export async function PATCH(
     return new NextResponse("Failed to update chapter", { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { courseId: string; chapterId: string } },
+) {
+  try {
+    const { userId } = await auth();
+    const { courseId, chapterId } = await params;
+    
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const courseOwner = await prisma.course.findFirst({
+      where: {
+        id: courseId,
+      },
+    });
+
+    if (!courseOwner) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    await prisma.chapter.delete({
+      where: {
+        id: chapterId,
+      },
+    });
+
+    return new NextResponse("Chapter deleted", { status: 200 });
+  } catch (error) {
+    console.error("Error deleting chapter:", error);
+    return new NextResponse("Failed to delete chapter", { status: 500 });
+  }
+}
