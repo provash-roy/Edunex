@@ -12,6 +12,7 @@ import PriceForm from "./_components/price-form";
 import ThumbnailForm from "./_components/thumbnail-form";
 import CategoryForm from "./_components/category-form";
 import AttachmentForm from "./_components/attachments-form";
+import CourseActionForm from "./_components/course-action-form";
 
 interface CourseIdPageProps {
   params: Promise<{ courseId: string }>;
@@ -55,14 +56,22 @@ export default async function CourseIdPage({ params }: CourseIdPageProps) {
   const totalFields = requiredFields.length;
   const completedFields = requiredFields.filter(Boolean).length;
   const completionText = `(${completedFields}/${totalFields})`;
+  const isComplete = completedFields === totalFields;
 
   return (
     <div className="p-4">
-      <div>
-        <h1 className="text-2xl font-medium">Course Setup</h1>
-        <span className="text-sm text-slate-700">
-          Complete all fields {completionText}
-        </span>
+      <div className="flex items-center justify-between gap-x-2">
+        <div>
+          <h1 className="text-2xl font-medium">Course Setup</h1>
+          <span className="text-sm text-slate-700">
+            Complete all fields {completionText}
+          </span>
+        </div>
+
+        <CourseActionForm 
+        disabled={!isComplete}
+          courseId={courseId}
+          isPublished={course.published} />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">

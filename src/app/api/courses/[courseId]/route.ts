@@ -35,3 +35,42 @@ export async function PATCH(
     return new NextResponse("Failed to update course", { status: 500 });
   }
 }
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { courseId: string } },
+) {
+  try {
+    const { userId } = await auth();
+    const { courseId } = await params;
+
+    if (!userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const course = await prisma.course.findUnique({
+      where: { id: courseId },
+    });
+
+    if (!course) {
+      return new NextResponse("Course not found", { status: 404 });
+    }
+
+    if (course.userId !== userId) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    await prisma.chapter.deleteMany({
+      where: { courseId },
+    });
+
+    const deletedCourse = await prisma.course.delete({
+      where: { id: courseId },
+    });
+
+    return NextResponse.json(deletedCourse);
+  } catch (error) {
+    console.log("Error deleting course:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
