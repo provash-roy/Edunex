@@ -14,9 +14,11 @@ model Course {
   description String?
   price       Float?
   thumbnail   String?
-  published   Boolean  @default(false)
+  isPublished   Boolean  @default(false)
 
-  category String?
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
+
   attachments Attachment[]
   chapters    Chapter[]
   enrollments Enrollment[]
@@ -26,9 +28,17 @@ model Course {
 
  
   @@index([userId])
+  @@index([categoryId])
 }
 
+model Category {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  courses   Course[]
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 model Attachment {
   id        String   @id @default(uuid())
@@ -96,7 +106,7 @@ model Enrollment {
   userId    String
 
   courseId  String
-  course    Course   @relation(fields: [courseId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
 
@@ -109,7 +119,6 @@ model Payment {
   userId           String
 
   stripeCustomerId String   @unique
-
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 }
