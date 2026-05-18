@@ -5,17 +5,16 @@ import { BarChart, Compass, Layout, List } from "lucide-react";
 
 import SidebarItem from "./sidebar-item";
 
-
 const guestRoutes = [
+  {
+    label: "Courses",
+    href: "/courses",
+    icon: Compass,
+  },
   {
     label: "Dashboard",
     href: "/dashboard",
     icon: Layout,
-  },
-  {
-    label: "Browse",
-    href: "/search",
-    icon: Compass,
   },
 ];
 
@@ -36,7 +35,7 @@ export default function SidebarRoutes() {
   const path = usePathname();
   const inTeacherPage = path.startsWith("/teacher");
   const routes = inTeacherPage ? teacherRoutes : guestRoutes;
-  
+
   return (
     <div className="flex flex-col w-full">
       {routes.map((route) => (

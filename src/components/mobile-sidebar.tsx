@@ -1,4 +1,4 @@
-import Sidebar from "@/app/(dashboard)/_components/sidebar";
+import Sidebar from "@/app/(main)/_components/sidebar";
 import {
   Sheet,
   SheetContent,
@@ -14,7 +14,7 @@ export default function MobileSidebar() {
         <Menu />
       </SheetTrigger>
       <SheetContent side="left">
-        <SheetTitle className="text-lg font-bold mb-4">Edunex</SheetTitle>
+        <SheetTitle className="text-lg font-bold mb-4">Edunexhh</SheetTitle>
         <Sidebar />
       </SheetContent>
     </Sheet>
