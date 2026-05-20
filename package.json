@@ -2,22 +2,21 @@
   "name": "edunex",
   "version": "0.1.0",
   "private": true,
-  "prisma": {
-    "seed": "node prisma/seed.js"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "prisma:seed": "node prisma/seed.js"
+    "lint": "eslint"
   },
   "dependencies": {
+    "@base-ui/react": "^1.4.1",
     "@clerk/nextjs": "^7.0.12",
     "@hello-pangea/dnd": "^18.0.1",
     "@hookform/resolvers": "^5.2.2",
+    "@mux/mux-node": "^14.1.0",
+    "@mux/mux-player-react": "^3.13.0",
     "@prisma/adapter-pg": "^7.7.0",
-    "@prisma/client": "^7.7.0",
+    "@prisma/client": "^7.8.0",
     "@uploadthing/react": "^7.3.3",
     "axios": "^1.15.0",
     "class-variance-authority": "^0.7.1",

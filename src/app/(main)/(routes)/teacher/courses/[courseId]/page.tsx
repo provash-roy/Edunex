@@ -1,4 +1,3 @@
-import React from "react";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 
@@ -40,6 +39,10 @@ export default async function CourseIdPage({ params }: CourseIdPageProps) {
     },
   });
 
+  const category = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+  });
+
   if (!course) {
     return redirect("/");
   }
@@ -68,10 +71,11 @@ export default async function CourseIdPage({ params }: CourseIdPageProps) {
           </span>
         </div>
 
-        <CourseActionForm 
-        disabled={!isComplete}
+        <CourseActionForm
+          disabled={!isComplete}
           courseId={courseId}
-          isPublished={course.published} />
+          isPublished={course.isPublished}
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -84,7 +88,7 @@ export default async function CourseIdPage({ params }: CourseIdPageProps) {
           </div>
           <TitleForm initialValues={course} courseId={courseId} />
           <DescriptionForm initialValues={course} courseId={courseId} />
-          <CategoryForm initialValues={course} courseId={courseId} />
+          <CategoryForm initialValues={course} courseId={courseId} category={category} />
 
           <ThumbnailForm initialValues={course} courseId={courseId} />
         </div>

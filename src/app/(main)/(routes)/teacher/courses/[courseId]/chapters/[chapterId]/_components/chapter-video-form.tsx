@@ -7,8 +7,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-import { Chapter, MuxData } from "@/generated/prisma/client";
 import FileUpload from "@/components/file-upload";
+import { Chapter, MuxData } from "@prisma/client";
 
 interface ChapterVideoFormProps {
   initialValues: Chapter & { muxData?: MuxData | null };
