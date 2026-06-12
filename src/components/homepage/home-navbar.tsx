@@ -1,4 +1,8 @@
+"use client";
+
+import Link from "next/link";
 import { Button } from "../ui/button";
+import { ModeToggle } from "../ui/mode-toggle";
 import {
   BarChart3,
   BookOpen,
@@ -21,45 +25,46 @@ export default function HomeNavbar() {
               Edunex
             </span>
           </div>
-          <nav className="hidden items-center gap-6">
-            <a
+          <nav className="flex items-center gap-6">
+            <Link
+              href="/"
               className="font-semibold text-neutral-950 text-sm leading-5 border-neutral-950 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2"
-              href="#"
             >
               <Home className="size-4" />
               Home
-            </a>
-            <a
+            </Link>
+            <Link
+              href="/courses"
               className="border-transparent font-medium text-neutral-500 text-sm leading-5 border-black/1 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2"
-              href="#"
             >
               <BookOpen className="size-4" />
               Courses
-            </a>
-            <a
+            </Link>
+            <Link
+              href="/courses"
               className="border-transparent font-medium text-neutral-500 text-sm leading-5 border-black/1 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2"
-              href="#"
             >
               <BarChart3 className="size-4" />
               My Learning
-            </a>
-            <a
+            </Link>
+            <Link
+              href="/"
               className="border-transparent font-medium text-neutral-500 text-sm leading-5 border-black/1 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2"
-              href="#"
             >
               <MessageSquare className="size-4" />
               Messages
-            </a>
-            <a
+            </Link>
+            <Link
+              href="/"
               className="border-transparent font-medium text-neutral-500 text-sm leading-5 border-black/1 border-t-0 border-r-0 border-b-2 border-l-0 border-solid flex pb-1 items-center gap-2"
-              href="#"
             >
               <User className="size-4" />
               Account
-            </a>
+            </Link>
           </nav>
         </div>
         <div className="flex items-center gap-3">
+          <ModeToggle />
           <Button
             className="font-medium text-neutral-950 text-sm leading-5 px-4 h-9"
             variant="ghost"
