@@ -1,6 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { ArrowLeft, Clock3, Play, Star } from "lucide-react";
+import {
+  ArrowLeft,
+  Check,
+  CircleCheck,
+  Clock3,
+  Download,
+  FileText,
+  Play,
+  UserRoundCheckIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -72,13 +81,13 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
       </div>
     );
   }
-
+  const publishedChapters = course.chapters.filter((ch) => ch.isPublished);
   const videoSrc = chapter.muxData?.playbackId
     ? `https://stream.mux.com/${chapter.muxData.playbackId}.m3u8`
     : chapter.videoUrl;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 md:mx-8 py-8">
       <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>
           <Link
@@ -105,7 +114,7 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
         <div className="space-y-6">
           <div className="rounded-3xl bg-slate-950 text-white">
             {videoSrc ? (
-              <video controls className="h-full w-full rounded-3xl bg-black">
+              <video controls className="h-[280] w-[300] rounded-3xl bg-black">
                 <source src={videoSrc} />
                 Your browser does not support video playback.
               </video>
@@ -115,74 +124,89 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
               </div>
             )}
           </div>
+          <div>
+            <div className="flex justify-between">
+              <h3>Chapter {chapter.position}</h3>
+              <Button>
+                {" "}
+                <CircleCheck /> Mark As Complete
+              </Button>
+            </div>
+            <h3 className="font-semibold">Wrapping Up</h3>
+            <h3 className="font-semibold">{chapter.description}</h3>
+            <Card className="rounded-2xl border border-slate-200 shadow-sm">
+              <CardContent className="p-4 flex items-center justify-between">
+                {/* Left Side */}
+                <div className="flex items-center gap-4">
+                  {/* Icon Box */}
+                  <div className="h-12 w-12 rounded-xl bg-slate-100 flex items-center justify-center">
+                    <FileText className="h-5 w-5 text-slate-600" />
+                  </div>
 
-          <Card className="rounded-3xl border border-slate-200">
-            <CardHeader className="p-6">
-              <CardTitle className="text-xl font-semibold">
-                {chapter.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4 p-6 text-sm text-slate-600">
-              <div className="flex items-center gap-3">
-                <Play className="h-4 w-4 text-slate-500" />
-                <span>
-                  {chapter.duration
-                    ? `${chapter.duration} min`
-                    : "Duration not set"}
-                </span>
-              </div>
-              <div className="text-slate-700">
-                {chapter.description ?? "No chapter description."}
-              </div>
-              <div className="grid gap-3 md:grid-cols-2">
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  Course: {course.title}
+                  {/* Text */}
+                  <div>
+                    <h2 className="text-sm font-semibold text-slate-900">
+                      Lesson attachment
+                    </h2>
+                    <p className="text-xs text-slate-500">
+                      Download the recap notes and checklist
+                    </p>
+                  </div>
                 </div>
-                <div className="rounded-2xl bg-slate-50 p-4">
-                  Status: {chapter.isPublished ? "Published" : "Draft"}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+
+                {/* Right Side Button */}
+                <Button
+                  variant="secondary"
+                  className="rounded-xl flex items-center gap-2"
+                >
+                  <Download className="h-4 w-4" />
+                  Download PDF
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
         </div>
 
         <aside className="space-y-5">
           <Card className="rounded-3xl border border-slate-200 bg-slate-50">
             <CardHeader className="p-6">
               <CardTitle className="text-lg font-semibold">
-                Chapter details
+                {course.title}
               </CardTitle>
             </CardHeader>
+
             <CardContent className="space-y-4 p-6 text-sm text-slate-600">
-              <div className="flex items-center justify-between">
-                <span>Video URL</span>
-                <span className="text-slate-900">
-                  {chapter.videoUrl ? "Yes" : "No"}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Mux playback</span>
-                <span className="text-slate-900">
-                  {chapter.muxData?.playbackId ? "Connected" : "Not connected"}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span>Free lesson</span>
-                <span className="text-slate-900">
-                  {chapter.isFree ? "Yes" : "No"}
-                </span>
+              <span className="font-medium">Chapters</span>
+
+              <div className="rounded-3xl border bg-white p-4 space-y-4">
+                {publishedChapters.map((chapter) => (
+                  <div
+                    key={chapter.id}
+                    className="rounded-2xl border p-4 hover:border-slate-300 transition"
+                  >
+                    <div className="flex justify-between gap-4">
+                      <div>
+                        <h3 className="font-semibold">{chapter.title}</h3>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-sm text-slate-500">
+                        <Clock3 className="h-4 w-4" />
+                        {chapter.duration ?? 0} min
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/courses/${course.id}/chapters/${chapter.id}`}
+                      className="mt-3 inline-flex items-center text-sm font-medium hover:text-slate-600"
+                    >
+                      <Play className="h-4 w-4 mr-1" />
+                      View chapter
+                    </Link>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
-
-          <Button asChild>
-            <Link
-              href={`/courses/${courseId}`}
-              className="w-full inline-flex justify-center"
-            >
-              Back to course overview
-            </Link>
-          </Button>
         </aside>
       </div>
     </div>
