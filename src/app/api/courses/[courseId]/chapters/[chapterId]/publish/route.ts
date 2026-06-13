@@ -4,20 +4,23 @@ import { prisma } from "@/lib/prisma";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { courseId: string; chapterId: string } },
+  { params }: { params: Promise<{ courseId: string; chapterId: string }> },
 ) {
   try {
     const { userId } = await auth();
-    const { courseId, chapterId } = await params;
+    const resolvedParams =
+      params && typeof (params as any).then === "function"
+        ? await (params as any)
+        : params;
+    const { courseId, chapterId } = resolvedParams;
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-
     const courseOwner = await prisma.course.findFirst({
       where: {
         id: courseId,
-        userId: userId, 
+        userId: userId,
       },
     });
 

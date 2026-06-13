@@ -18,19 +18,21 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Course } from "@/generated/prisma/client";
-
+import { Course } from "@prisma/client";
 
 const schema = z.object({
-  price: z.coerce.number().positive("Price must be a positive number"),
+  description: z.string().min(5, "Description must be at least 5 characters"),
 });
 
-interface PriceFormProps {
-  initialValues: Course
+interface DescriptionFormProps {
+  initialValues: Course;
   courseId: string;
 }
 
-export default function PriceForm({ initialValues, courseId }: PriceFormProps) {
+export default function DescriptionForm({
+  initialValues,
+  courseId,
+}: DescriptionFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((prev) => !prev);
   const router = useRouter();
@@ -38,7 +40,7 @@ export default function PriceForm({ initialValues, courseId }: PriceFormProps) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      price: initialValues?.price|| undefined,
+      description: initialValues?.description || "",
     },
   });
 
@@ -54,47 +56,39 @@ export default function PriceForm({ initialValues, courseId }: PriceFormProps) {
   return (
     <div className="border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Sell your course
+        Course Description
         <Button onClick={toggleEdit} variant="ghost" size="sm">
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil />
-              Edit Price
+              Edit Description
             </>
           )}
         </Button>
       </div>
       {!isEditing && (
         <p className="text-sm text-slate-600 mt-1">
-          {initialValues.price || "No price set"}
+          {initialValues.description || "No description provided yet."}
         </p>
       )}
       {isEditing && (
         <>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Controller
-              name="price"
+              name="description"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={field.name}>Course Price</FieldLabel>
-
                   <Input
                     {...field}
-                    value={field.value ?? ""}
                     disabled={isSubmitting}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="e.g. 29.99"
+                    placeholder="e.g. Complete MERN Stack Course"
                     autoComplete="off"
                   />
-
-                  <FieldDescription>
-                    Set a price for your course.
-                  </FieldDescription>
-
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -102,7 +96,9 @@ export default function PriceForm({ initialValues, courseId }: PriceFormProps) {
               )}
             />
 
-            <Button type="submit">Submit</Button>
+            <Button type="submit" size="sm" disabled={isSubmitting}>
+              Save
+            </Button>
           </form>
         </>
       )}

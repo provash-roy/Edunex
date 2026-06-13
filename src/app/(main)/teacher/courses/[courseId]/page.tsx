@@ -52,7 +52,7 @@ export default async function CourseIdPage({ params }: CourseIdPageProps) {
     course.description,
     course.thumbnail,
     course.price,
-    course.category,
+    course.categoryId,
     course.chapters.some((chapter) => chapter.isPublished),
   ];
 

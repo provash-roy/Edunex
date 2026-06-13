@@ -1,6 +1,7 @@
 import React from "react";
 import Sidebar from "./_components/sidebar";
 import Navbar from "@/components/navbar";
+import MobileSidebar from "@/components/mobile-sidebar";
 import { Toaster } from "react-hot-toast";
 
 export default function DashboardLayout({
@@ -14,7 +15,6 @@ export default function DashboardLayout({
       <div className="h-full hidden md:flex md:w-56">
         <Sidebar />
       </div>
-
       <main className="h-full flex-1">
         <div>
           <Navbar />

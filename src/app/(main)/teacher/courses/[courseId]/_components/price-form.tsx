@@ -18,21 +18,18 @@ import { Input } from "@/components/ui/input";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { Course } from "@/generated/prisma/client";
+import { Course } from "@prisma/client";
 
 const schema = z.object({
-  description: z.string().min(5, "Description must be at least 5 characters"),
+  price: z.coerce.number().positive("Price must be a positive number"),
 });
 
-interface DescriptionFormProps {
+interface PriceFormProps {
   initialValues: Course;
   courseId: string;
 }
 
-export default function DescriptionForm({
-  initialValues,
-  courseId,
-}: DescriptionFormProps) {
+export default function PriceForm({ initialValues, courseId }: PriceFormProps) {
   const [isEditing, setIsEditing] = useState(false);
   const toggleEdit = () => setIsEditing((prev) => !prev);
   const router = useRouter();
@@ -40,7 +37,7 @@ export default function DescriptionForm({
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      description: initialValues?.description || "",
+      price: initialValues?.price || undefined,
     },
   });
 
@@ -56,39 +53,47 @@ export default function DescriptionForm({
   return (
     <div className="border bg-slate-100 rounded-md p-4">
       <div className="font-medium flex items-center justify-between">
-        Course Description
+        Sell your course
         <Button onClick={toggleEdit} variant="ghost" size="sm">
           {isEditing ? (
             <>Cancel</>
           ) : (
             <>
               <Pencil />
-              Edit Description
+              Edit Price
             </>
           )}
         </Button>
       </div>
       {!isEditing && (
         <p className="text-sm text-slate-600 mt-1">
-          {initialValues.description || "No description provided yet."}
+          {initialValues.price || "No price set"}
         </p>
       )}
       {isEditing && (
         <>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Controller
-              name="description"
+              name="price"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor={field.name}>Course Price</FieldLabel>
+
                   <Input
                     {...field}
+                    value={field.value ?? ""}
                     disabled={isSubmitting}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    placeholder="e.g. Complete MERN Stack Course"
+                    placeholder="e.g. 29.99"
                     autoComplete="off"
                   />
+
+                  <FieldDescription>
+                    Set a price for your course.
+                  </FieldDescription>
+
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -96,9 +101,7 @@ export default function DescriptionForm({
               )}
             />
 
-            <Button type="submit" size="sm" disabled={isSubmitting}>
-              Save
-            </Button>
+            <Button type="submit">Submit</Button>
           </form>
         </>
       )}

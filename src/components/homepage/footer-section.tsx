@@ -3,118 +3,77 @@ import { Button } from "../ui/button";
 import { GraduationCap, Globe2, Mail, Share2 } from "lucide-react";
 import { Separator } from "../ui/separator";
 
+const links = {
+  Courses: ["Development", "Design", "Marketing", "Business"],
+  Company: ["About", "Careers", "Blog", "Press"],
+  Support: ["Help Center", "Contact", "FAQ", "Community"],
+  Legal: ["Privacy", "Terms", "Cookies"],
+};
+
 export default function Footer() {
   return (
-    <footer className="bg-white border-neutral-200 border-t-1 border-r-0 border-b-0 border-l-0 border-solid">
-      <div className="grid max-w-[1140px] grid-cols-2 mx-auto px-8 py-12 gap-8">
-        <div className="col-span-2 flex flex-col gap-4">
+    <footer className="bg-white dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 transition-colors">
+      {/* GRID CONTAINER FIX */}
+      <div className="max-w-7xl mx-auto px-8 md:px-8 py-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 gap-10">
+        {/* Brand */}
+        <div className="md:col-span-2 flex flex-col gap-4">
           <div className="flex items-center gap-2">
-            <div className="size-8 rounded-lg bg-neutral-900 text-neutral-50 flex justify-center items-center">
-              <GraduationCap className="size-5" />
+            <div className="size-9 rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 flex items-center justify-center">
+              <GraduationCap className="w-5 h-5" />
             </div>
-            <span className="font-bold text-neutral-950 text-lg leading-7 tracking-tight">
-              Learnova
+            <span className="font-bold text-lg text-neutral-950 dark:text-neutral-100">
+              Edunex
             </span>
           </div>
-          <p className="text-neutral-500 text-sm leading-5">
+
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-6 max-w-sm">
             Empowering millions to learn the skills they need to succeed.
           </p>
+
+          {/* Social */}
           <div className="flex items-center gap-3">
-            <Button
-              className="size-9 bg-white text-neutral-950 border-neutral-200 border-0 border-solid"
-              size="icon"
-              variant="outline"
-            >
-              <Globe2 className="size-4" />
-            </Button>
-            <Button
-              className="size-9 bg-white text-neutral-950 border-neutral-200 border-0 border-solid"
-              size="icon"
-              variant="outline"
-            >
-              <Mail className="size-4" />
-            </Button>
-            <Button
-              className="size-9 bg-white text-neutral-950 border-neutral-200 border-0 border-solid"
-              size="icon"
-              variant="outline"
-            >
-              <Share2 className="size-4" />
-            </Button>
+            {[Globe2, Mail, Share2].map((Icon, i) => (
+              <Button
+                key={i}
+                size="icon"
+                variant="outline"
+                className="size-9 rounded-lg border-neutral-300 dark:border-neutral-700 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition"
+              >
+                <Icon className="w-4 h-4" />
+              </Button>
+            ))}
           </div>
         </div>
-        <div className="flex flex-col gap-3">
-          <span className="font-semibold text-neutral-950 text-sm leading-5">
-            Courses
-          </span>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Development
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Design
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Marketing
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Business
-          </a>
-        </div>
-        <div className="flex flex-col gap-3">
-          <span className="font-semibold text-neutral-950 text-sm leading-5">
-            Company
-          </span>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            About
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Careers
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Blog
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Press
-          </a>
-        </div>
-        <div className="flex flex-col gap-3">
-          <span className="font-semibold text-neutral-950 text-sm leading-5">
-            Support
-          </span>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Help Center
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Contact
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            FAQ
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Community
-          </a>
-        </div>
-        <div className="flex flex-col gap-3">
-          <span className="font-semibold text-neutral-950 text-sm leading-5">
-            Legal
-          </span>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Privacy
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Terms
-          </a>
-          <a className="text-neutral-500 text-sm leading-5" href="#">
-            Cookies
-          </a>
-        </div>
+
+        {/* Links GRID FIX */}
+        {Object.entries(links).map(([title, items]) => (
+          <div key={title} className="flex flex-col gap-3">
+            <h4 className="font-semibold text-sm text-neutral-950 dark:text-neutral-100">
+              {title}
+            </h4>
+
+            {items.map((item) => (
+              <a
+                key={item}
+                href="#"
+                className="text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-neutral-200 transition"
+              >
+                {item}
+              </a>
+            ))}
+          </div>
+        ))}
       </div>
-      <Separator className="bg-neutral-200" />
-      <div className="max-w-[1140px] flex mx-auto px-8 py-6 justify-between items-center">
-        <span className="text-neutral-500 text-sm leading-5">
-          © 2025 Learnova, Inc. All rights reserved.
+
+      <Separator className="bg-neutral-200 dark:bg-neutral-800" />
+
+      {/* Bottom bar FIX */}
+      <div className="max-w-7xl mx-auto px-6 md:px-8 py-6 flex flex-col md:flex-row justify-between items-center gap-3">
+        <span className="text-sm text-neutral-500 dark:text-neutral-400 text-center md:text-left">
+          © 2025 Edunex, Inc. All rights reserved.
         </span>
-        <span className="text-neutral-500 text-sm leading-5">
+
+        <span className="text-sm text-neutral-500 dark:text-neutral-400 text-center md:text-right">
           Made with care for lifelong learners
         </span>
       </div>

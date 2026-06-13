@@ -8,7 +8,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-import { Course } from "@/generated/prisma/client";
+import { Course } from "@prisma/client";
 import FileUpload from "@/components/file-upload";
 
 interface ThumbnailFormProps {

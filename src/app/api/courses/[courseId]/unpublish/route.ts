@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { courseId: string } },
+  { params }: { params: Promise<{ courseId: string }> },
 ) {
   const { courseId } = await params;
   try {
@@ -29,7 +29,7 @@ export async function PATCH(
         id: courseId,
       },
       data: {
-        published: false,
+        isPublished: false,
       },
     });
 

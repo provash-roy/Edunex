@@ -12,13 +12,13 @@ import Footer from "@/components/homepage/footer-section";
 
 export default function HomePage() {
   return (
-    <div className="w-full h-fit min-h-screen w-screen min-w-screen max-w-screen overflow-visible">
+    <div>
       <HomeNavbar />
-      <main className="max-w-[1140px] mx-auto px-8">
+      <main className="bg-white dark:bg-neutral-950">
         <HeroSection />
         <CourseSection />
         <FeatureSection />
-
+        <ReviewSection />
         <CtaSection />
         <Footer />
       </main>

@@ -5,7 +5,7 @@ export const getCourses = async () => {
   try {
     const response = await prisma.course.findMany({
       where: {
-        published: true,
+        isPublished: true,
       },
     });
     return response;

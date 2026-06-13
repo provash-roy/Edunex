@@ -4,12 +4,16 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(
   req: Request,
-  { params }: { params: { courseId: string } }
+  { params }: { params: Promise<{ courseId: string }> },
 ) {
   try {
-    const { userId } =await auth();
+    const { userId } = await auth();
     const { title } = await req.json();
-    const { courseId } =await params;
+    const resolvedParams =
+      params && typeof (params as any).then === "function"
+        ? await (params as any)
+        : params;
+    const { courseId } = resolvedParams;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });

@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-import { Course, Chapter } from "@/generated/prisma/client";
+import { Course, Chapter } from "@prisma/client";
 
 import ChapterList from "./chapters-list";
 import ChaptersList from "./chapters-list";

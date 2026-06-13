@@ -1,58 +1,57 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Course } from "@prisma/client";
 
 interface CourseCardProps {
-  id: number;
-  title: string;
-  description: string;
-  thumbnail?: string;
-  price?: number;
-  category?: string;
+  course: Course;
 }
 
-export default function CourseCard({ course }: { course: CourseCardProps }) {
+export default function CourseCard({ course }: CourseCardProps) {
   return (
-    <Link href={`/courses/${course.id}`}>
-      <Card className="relative mx-auto w-full max-w-sm overflow-hidden rounded-xl shadow-md transition-transform hover:scale-105 hover:shadow-lg">
-        {/* Thumbnail */}
-        {course.thumbnail && (
-          <Image
-            src={course.thumbnail}
-            alt={course.title}
-            width={400}
-            height={400}
-            className="w-full h-48 object-cover rounded-t-xl"
-          />
-        )}
+    <Link href={`/courses/${course.id}`} className="block group">
+      <div className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+        {/* IMAGE */}
+        <div className="relative w-full aspect-video overflow-hidden">
+          {course.thumbnail ? (
+            <Image
+              src={course.thumbnail}
+              alt={course.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-r from-blue-500 to-indigo-600" />
+          )}
+        </div>
 
-        {/* Card Content */}
-        <CardHeader className="p-4">
-          <CardTitle className="text-lg font-semibold">
+        {/* CONTENT */}
+        <div className="p-4 space-y-2">
+          {/* TITLE */}
+          <h3 className="font-semibold text-gray-900 dark:text-white text-base leading-snug line-clamp-2">
             {course.title}
-          </CardTitle>
-          <CardDescription className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-            {course.description.length > 100
-              ? course.description.substring(0, 100) + "..."
-              : course.description}
-          </CardDescription>
-        </CardHeader>
+          </h3>
 
-        {/* Card Footer */}
-        <CardFooter className="p-4">
-          <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-            Learn More
-          </Button>
-        </CardFooter>
-      </Card>
+          {/* AUTHOR */}
+          <p className="text-xs text-gray-500 dark:text-gray-400">
+            {course.userId ?? "Unknown Instructor"}
+          </p>
+
+          {/* RATING + PRICE ROW */}
+          <div className="flex items-center justify-between pt-1">
+            {/* Rating */}
+            <div className="flex items-center gap-1 text-sm">
+              <span className="font-semibold text-amber-500">4.5</span>
+              <span className="text-amber-400">★</span>
+            </div>
+
+            {/* Price */}
+            <div className="font-bold text-gray-900 dark:text-white">
+              ${course.price ?? "49.99"}
+            </div>
+          </div>
+        </div>
+      </div>
     </Link>
   );
 }

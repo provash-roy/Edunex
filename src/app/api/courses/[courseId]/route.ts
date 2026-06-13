@@ -4,12 +4,16 @@ import { NextResponse } from "next/server";
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { courseId: string } },
+  { params }: { params: Promise<{ courseId: string }> },
 ) {
   try {
     const { userId } = await auth();
     const values = await req.json();
-    const { courseId } = await params;
+    const resolvedParams =
+      params && typeof (params as any).then === "function"
+        ? await (params as any)
+        : params;
+    const { courseId } = resolvedParams;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
@@ -38,11 +42,15 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { courseId: string } },
+  { params }: { params: Promise<{ courseId: string }> },
 ) {
   try {
     const { userId } = await auth();
-    const { courseId } = await params;
+    const resolvedParams2 =
+      params && typeof (params as any).then === "function"
+        ? await (params as any)
+        : params;
+    const { courseId } = resolvedParams2;
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });

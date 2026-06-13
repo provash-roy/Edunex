@@ -14,7 +14,7 @@ export default function MobileSidebar() {
         <Menu />
       </SheetTrigger>
       <SheetContent side="left">
-        <SheetTitle className="text-lg font-bold mb-4">Edunexhh</SheetTitle>
+        <SheetTitle className="text-lg font-bold mb-4">Edunex</SheetTitle>
         <Sidebar />
       </SheetContent>
     </Sheet>
